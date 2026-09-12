@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Виталий Тихонов — SOC-аналитик</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap');
+
+  :root {
+    --orange: #ff6b1a;
+    --orange-light: #ff9a4d;
+    --dark: #1a1a2e;
+    --darker: #0f0f1a;
+    --cream: #fff5e6;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --blue: #3498db;
+    --purple: #9b59b6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Rubik', sans-serif;
+    background: var(--darker);
+    color: var(--cream);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ===== ЗВЁЗДНОЕ НЕБО ===== */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  /* ===== ПЛАВАЮЩИЕ ИКОНКИ ===== */
+  .float-icon {
+    position: fixed;
+    font-size: 28px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 1;
+    animation: floatAround 20s infinite linear;
+  }
+  @keyframes floatAround {
+    0% { transform: translate(0,0) rotate(0deg); }
+    25% { transform: translate(30px,-40px) rotate(90deg); }
+    50% { transform: translate(-20px,-80px) rotate(180deg); }
+    75% { transform: translate(40px,-30px) rotate(270deg); }
+    100% { transform: translate(0,0) rotate(360deg); }
+  }
+
+  /* ===== КОНТЕЙНЕР ===== */
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* ===== ХЕДЕР С ПЕРСОНАЖЕМ ===== */
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 60px 0 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .avatar {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--orange);
+    box-shadow: 0 0 40px rgba(255,107,26,0.4);
+    animation: bob 3s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Мультяшные лучи вокруг аватара */
+  .rays {
+    position: absolute;
+    inset: -30px;
+    left: -15em;
+    z-index: 1;
+    animation: spin 12s linear infinite;
+  }
+  .ray {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px; height: 30px;
+    background: var(--orange-light);
+    border-radius: 4px;
+    transform-origin: 0 0;
+    opacity: 0.5;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .hero-text h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--orange), #ffd93d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+
+  .hero-text .subtitle {
+    font-size: 1.1rem;
+    color: #aaa;
+    margin-bottom: 20px;
+  }
+
+  .hero-text .subtitle span {
+    color: var(--orange);
+    font-weight: 600;
+  }
+
+  .contact-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,107,26,0.12);
+    border: 1px solid rgba(255,107,26,0.3);
+    padding: 8px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--cream);
+    transition: all 0.3s;
+  }
+  .chip:hover {
+    background: rgba(255,107,26,0.25);
+    transform: translateY(-3px) scale(1.05);
+  }
+
+  /* ===== СЕКЦИИ ===== */
+  section {
+    margin: 60px 0;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title .emoji {
+    font-size: 2rem;
+    animation: wiggle 2s infinite;
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+  }
+
+  /* ===== КАРТОЧКИ ОПЫТА ===== */
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--orange), var(--purple), var(--blue));
+    border-radius: 3px;
+  }
+
+  .job {
+    position: relative;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .job:hover {
+    transform: translateX(8px);
+    border-color: var(--orange);
+    background: rgba(255,107,26,0.06);
+  }
+
+  .job::before {
+    content: '';
+    position: absolute;
+    left: -26px; top: 28px;
+    width: 14px; height: 14px;
+    background: var(--orange);
+    border-radius: 50%;
+    border: 3px solid var(--darker);
+    box-shadow: 0 0 12px var(--orange);
+  }
+
+  .job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .job-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--orange-light);
+  }
+
+  .job-company {
+    color: #ccc;
+    font-size: 0.95rem;
+  }
+
+  .job-date {
+    background: rgba(255,107,26,0.15);
+    color: var(--orange-light);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .job ul {
+    list-style: none;
+    margin-top: 12px;
+  }
+  .job ul li {
+    padding: 4px 0 4px 22px;
+    position: relative;
+    font-size: 0.9rem;
+    color: #bbb;
+    line-height: 1.5;
+  }
+  .job ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--orange);
+    font-weight: bold;
+  }
+
+  .achievement {
+    background: linear-gradient(135deg, rgba(46,204,113,0.1), rgba(52,152,219,0.1));
+    border-left: 3px solid var(--green);
+    padding: 12px 16px;
+    border-radius: 0 10px 10px 0;
+    margin-top: 14px;
+    font-size: 0.88rem;
+    color: #ddd;
+  }
+  .achievement strong {
+    color: var(--green);
+  }
+
+  /* ===== НАВЫКИ ===== */
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .skill-tag {
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 2px solid;
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-tag::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .skill-tag:hover::before { opacity: 0.15; }
+  .skill-tag:hover { transform: translateY(-4px) scale(1.08) rotate(-2deg); }
+
+  .sk-orange { color: var(--orange); border-color: var(--orange); }
+  .sk-blue { color: var(--blue); border-color: var(--blue); }
+  .sk-green { color: var(--green); border-color: var(--green); }
+  .sk-purple { color: var(--purple); border-color: var(--purple); }
+  .sk-red { color: var(--red); border-color: var(--red); }
+  .sk-yellow { color: #ffd93d; border-color: #ffd93d; }
+
+  /* ===== ПРОЕКТЫ-КВЕСТЫ ===== */
+  .quests {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .quest {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    cursor: pointer;
+  }
+
+  .quest:hover {
+    transform: translateY(-8px) rotate(1deg);
+    border-color: var(--orange);
+    box-shadow: 0 20px 40px rgba(255,107,26,0.2);
+  }
+
+  .quest-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    display: inline-block;
+    transition: transform 0.4s;
+  }
+  .quest:hover .quest-icon {
+    transform: scale(1.3) rotate(15deg);
+  }
+
+  .quest h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: var(--orange-light);
+  }
+
+  .quest p {
+    font-size: 0.88rem;
+    color: #aaa;
+    line-height: 1.6;
+  }
+
+  /* ===== МАЙНЕР-ИГРА ===== */
+  .miner-game {
+    background: rgba(231,76,60,0.08);
+    border: 2px dashed rgba(231,76,60,0.4);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .miner-game h3 {
+    color: var(--red);
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+  }
+
+  .miner-game p {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  .miner-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 2;
+  }
+  .miner-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 30px rgba(231,76,60,0.6);
+  }
+  .miner-btn:active { transform: scale(0.95); }
+
+  .miner {
+    position: absolute;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 3;
+    user-select: none;
+  }
+  .miner:hover { transform: scale(1.3) !important; }
+
+  .score {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: var(--green);
+    font-weight: 700;
+    min-height: 30px;
+  }
+
+  /* ===== ФУТЕР ===== */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #555;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 60px;
+  }
+
+  footer .heart {
+    color: var(--red);
+    animation: heartbeat 1.5s infinite;
+    display: inline-block;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+  }
+
+  /* ===== АЛЕРТ-УВЕДОМЛЕНИЯ ===== */
+  .alert-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--dark);
+    border-left: 4px solid var(--orange);
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 1000;
+    max-width: 320px;
+    transform: translateX(400px);
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    font-size: 0.85rem;
+  }
+  .alert-toast.show { transform: translateX(0); }
+  .alert-toast .alert-title {
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 4px;
+  }
+  .alert-toast .alert-body { color: #bbb; }
+
+  /* ===== ПРОГРЕСС-БАР ===== */
+  .progress-section {
+    margin-top: 30px;
+  }
+  .progress-item {
+    margin-bottom: 16px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: #ccc;
+  }
+  .progress-bar {
+    height: 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    width: 0;
+    transition: width 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+
+  /* ===== АДАПТИВ ===== */
+  @media (max-width: 600px) {
+    .hero { flex-direction: column; text-align: center; }
+    .contact-chips { justify-content: center; }
+    .job-header { flex-direction: column; }
+    .section-title { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Звёзды -->
+<div class="stars" id="stars"></div>
+
+<!-- Плавающие иконки -->
+<div class="float-icon" style="top:10%; left:5%; animation-delay:0s;">🛡️</div>
+<div class="float-icon" style="top:30%; right:8%; animation-delay:-5s;">🐧</div>
+<div class="float-icon" style="top:60%; left:3%; animation-delay:-10s;">🔍</div>
+<div class="float-icon" style="top:80%; right:5%; animation-delay:-15s;">⚡</div>
+<div class="float-icon" style="top:45%; left:90%; animation-delay:-7s;">🔐</div>
+
+<div class="container">
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="avatar-wrap">
+      <div class="rays" id="rays"></div>
+      <!-- <img class="avatar" src="https://i.ibb.co/6PqXqYJ/avatar-placeholder.jpg" 
+           alt="Виталий Тихонов"
+           onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%23ff6b1a%22 width=%22200%22 height=%22200%22/><circle cx=%22100%22 cy=%2285%22 r=%2245%22 fill=%22%23fff5e6%22/><ellipse cx=%22100%22 cy=%22180%22 rx=%2265%22 ry=%2255%22 fill=%22%23fff5e6%22/><rect x=%2260%22 y=%2245%22 width=%2280%22 height=%2240%22 rx=%2210%22 fill=%22%23e74c3c%22/></svg>'"> -->
+    </div>
+    <div class="hero-text">
+      <h1>Виталий Тихонов</h1>
+      <p class="subtitle">
+        <span>SOC-аналитик</span> · 36 лет · Москва<br>
+        Ловлю майнеров, разбираю фишинг, читаю логи как книгу
+      </p>
+      <div class="contact-chips">
+        <span class="chip">📞 +7 (977) 123-07-51</span>
+        <span class="chip">✉️ ураура282@gmail.com</span>
+        <span class="chip">💼 Самозанят</span>
+        <span class="chip">🚗 Права B</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== ОПЫТ ===== -->
+  <section>
+    <h2 class="section-title"><span class="emoji">💼</span> Боевой путь</h2>
+    <div class="timeline">
+
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Дежурный инженер по информационной безопасности</div>
+            <div class="job-company">Ес-Лизинг · Москва</div>
+          </div>
+          <div class="job-date">Ноябрь 2025 — сейчас</div>
+        </div>
+        <ul>
+          <li>Настройка системы мониторинга и аналитики данных</li>
+          <li>Работа с корректировками прав в Active Directory</li>
+          <li>Тестирование новых модулей продукта</li>
+          <li>Решение и исправление ошибок по продукту партнёров</li>
+          <li>Работа с заявками и обращениями сотрудников</li>
+          <li>Linux система Astra Linux, journalctl, реагирование на alert</li>
+          <li>Администрирование СКДПУ НТ и Secret Net Studio</li>
+          <li>Обновление лицензий продуктов</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Битрикс-Администратор</div>
+            <div class="job-company">GalaTexClab · Москва</div>
+          </div>
+          <div class="job-date">Январь 2022 — Апрель 2026</div>
+        </div>
+        <ul>
+          <li>Разработка и поддержка сайта компании</li>
+          <li>Создание и обновление модулей и функций сайта</li>
+          <li>Редизайн шаблонов магазина (UX/UI-тренды)</li>
+          <li>Оптимизация HTML, CSS, JS, ускорение загрузки (Lighthouse)</li>
+          <li>Разработка JS-скриптов (анимации, AJAX, динамика)</li>
+          <li>Интеграция с внешними API (платежи, доставка, 1С)</li>
+        </ul>
+        <div class="achievement">
+          <strong>🏆 Достижения:</strong> Telegram-бот для компании · Парсер товаров · 
+          Калькулятор ткани · A/B-тестирование · SEO-оптимизация · Мобильная версия
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Web-разработчик</div>
+            <div class="job-company">Unident</div>
+          </div>
+          <div class="job-date">Август 2021 — Декабрь 2021</div>
+        </div>
+        <ul>
+          <li>Разработка сайтов компании</li>
+          <li>Поддержка сайтов компании</li>
+          <li>Дизайн, наполнение, карточки товаров</li>
+          <li>Ведение соцсетей, рекламные кампании</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== НАВЫКИ ===== -->
+  <section>
+    <h2 class="section-title"><span class="emoji">⚔️</span> Арсенал</h2>
+    <div class="skills-grid">
+      <span class="skill-tag sk-orange">SIEM</span>
+      <span class="skill-tag sk-orange">Secret Net Studio</span>
+      <span class="skill-tag sk-red">Nmap</span>
+      <span class="skill-tag sk-red">OWASP Top 10</span>
+      <span class="skill-tag sk-blue">Python</span>
+      <span class="skill-tag sk-blue">Linux</span>
+      <span class="skill-tag sk-green">Git</span>
+      <span class="skill-tag sk-green">CI/CD</span>
+      <span class="skill-tag sk-purple">Docker-compose</span>
+      <span class="skill-tag sk-purple">Контейнеризация</span>
+      <span class="skill-tag sk-yellow">Astra Linux</span>
+      <span class="skill-tag sk-yellow">journalctl</span>
+      <span class="skill-tag sk-orange">СКДПУ НТ</span>
+      <span class="skill-tag sk-red">Wireshark</span>
+      <span class="skill-tag sk-blue">JavaScript</span>
+      <span class="skill-tag sk-green">Мониторинг</span>
+      <span class="skill-tag sk-purple">Облачные платформы</span>
+      <span class="skill-tag sk-yellow">MITRE ATT&CK</span>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-item">
+        <div class="progress-label"><span>Информационная безопасность</span><span>85%</span></div>
+        <div class="progress-bar"><div class="progress-fill" data-width="85%" style="background: linear-gradient(90deg, var(--orange), var(--red));"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Linux / Astra Linux</span><span>75%</span></div>
+        <div class="progress-bar"><div class="progress-fill" data-width="75%" style="background: linear-gradient(90deg, var(--blue), var(--purple));"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Веб-разработка (Bitrix, JS)</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill" data-width="90%" style="background: linear-gradient(90deg, var(--green), #1abc9c);"></div></div>
+      </div>
+      <div class="progress-item">
+        <div class="progress-label"><span>Английский (A1 → Intermediate)</span><span>25%</span></div>
+        <div class="progress-bar"><div class="progress-fill" data-width="50%" style="background: linear-gradient(90deg, #ffd93d, var(--orange));"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ПРОЕКТЫ ===== -->
+  <section>
+    <h2 class="section-title"><span class="emoji">🎮</span> Самостоятельные квесты</h2>
+    <div class="quests">
+
+      <div class="quest">
+        <div class="quest-icon">🕵️</div>
+        <h3>Охота на майнер</h3>
+        <p>На тестовом Linux-сервере выявил и обезвредил XMRig. Использовал <code>ss -tulpn</code>, 
+        убил процесс через <code>kill -9</code>, проверил 8 точек автозагрузки (cron, systemd, 
+        .bashrc, .ssh) и удалил скрытые файлы.</p>
+      </div>
+
+      <div class="quest">
+        <div class="quest-icon">🎣</div>
+        <h3>Фишинг-симуляция</h3>
+        <p>Полный цикл: анализ заголовков подозрительного письма → проверка ссылки через 
+        VirusTotal → блокировка домена на DNS-форвардере → изоляция клиента, перешедшего по ссылке.</p>
+      </div>
+
+      <div class="quest">
+        <div class="quest-icon">📡</div>
+        <h3>Мониторинг сети</h3>
+        <p>Использовал Wireshark и tcpdump для захвата трафика. Научился отличать Beaconing 
+        (регулярные тиковые пакеты) от нормального HTTPS-трафика.</p>
+      </div>
+
+      <div class="quest">
+        <div class="quest-icon">🤖</div>
+        <h3>Telegram-бот</h3>
+        <p>Разработал бота для компании: парсер актуальных товаров, удобный поиск и фильтрация, 
+        уведомления о скидках и новинках.</p>
+      </div>
+
+      <div class="quest">
+        <div class="quest-icon">🧵</div>
+        <h3>Калькулятор ткани</h3>
+        <p>Динамический расчёт метража с учётом подкладки, визуализация выбора материалов, 
+        интеграция с корзиной для быстрого заказа.</p>
+      </div>
+
+      <div class="quest">
+        <div class="quest-icon">🛡️</div>
+        <h3>Скрипт против майнеров</h3>
+        <p>Написал скрипт для автоматического поиска майнеров в системе. Освоил базовые команды 
+        Linux: ss, find, journalctl, iptables.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== МИНИ-ИГРА ===== -->
+  <section>
+    <h2 class="section-title"><span class="emoji">🔫</span> Поймай майнера!</h2>
+    <div class="miner-game" id="minerGame">
+      <h3>🚨 Обнаружен майнер в системе!</h3>
+      <p>Кликни по нему, чтобы обезвредить. Но он быстро перемещается...</p>
+      <button class="miner-btn" id="minerBtn">Начать охоту</button>
+      <div class="score" id="score"></div>
+    </div>
+  </section>
+
+  <!-- ===== ОБРАЗОВАНИЕ ===== -->
+  <section>
+    <h2 class="section-title"><span class="emoji">🎓</span> Образование</h2>
+    <div class="timeline">
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Информационная безопасность, DevSecOps</div>
+            <div class="job-company">Нетология · 2026</div>
+          </div>
+          <div class="job-date">Высшее</div>
+        </div>
+      </div>
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Юриспруденция, Юрист</div>
+            <div class="job-company">Институт экономики, финансов и права им. М. Ломоносова · 2011</div>
+          </div>
+          <div class="job-date">Высшее</div>
+        </div>
+      </div>
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <div class="job-title">Специалист по информационной безопасности</div>
+            <div class="job-company">Нетология · 2026</div>
+          </div>
+          <div class="job-date">Курс</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== О СЕБЕ ===== -->
+  <section>
+    <h2 class="section-title"><span class="emoji">💬</span> Обо мне</h2>
+    <div class="job">
+      <ul>
+        <li>Быстро обучаюсь новым стекам: освоил Linux-команды (ss, find, journalctl, iptables) и написал скрипт для поиска майнеров</li>
+        <li>Понимаю принципы MITRE ATT&CK, применяю фреймворк для классификации атак (Initial Access, Execution, C2)</li>
+        <li>Работаю в режиме многозадачности и стресса (симуляция атаки с 5 одновременными алертами)</li>
+        <li>Коммуникабелен: опыт переговоров с руководством в симуляции — объясняю технические проблемы на бизнес-языке</li>
+        <li>Английский: чтение технической документации (Intermediate)</li>
+        <li>Готов к редким командировкам, не готов к переезду</li>
+        <li>Формат работы: на месте работодателя, гибрид</li>
+        <li>Время в пути до работы: не более часа</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== ФУТЕР ===== -->
+<footer>
+  <p>Сделано с <span class="heart">❤️</span> и оранжевой шапкой</p>
+  <p style="margin-top:8px;">Виталий Тихонов · Резюме обновлено 10 сентября 2026</p>
+</footer>
+
+<script>
+  // ===== ЗВЁЗДЫ =====
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.animationDuration = (2 + Math.random() * 3) + 's';
+    starsContainer.appendChild(star);
+  }
+
+  // ===== ЛУЧИ ВОКРУГ АВАТАРА =====
+  const rays = document.getElementById('rays');
+  for (let i = 0; i < 12; i++) {
+    const ray = document.createElement('div');
+    ray.className = 'ray';
+    ray.style.transform = `rotate(${i * 30}deg) translateY(-80px)`;
+    rays.appendChild(ray);
+  }
+
+  // ===== ПРОГРЕСС-БАРЫ =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fill = entry.target;
+        fill.style.width = fill.dataset.width;
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.progress-fill').forEach(fill => observer.observe(fill));
+
+  // ===== АЛЕРТ-УВЕДОМЛЕНИЯ =====
+  const alerts = [
+    { title: '🚨 ALERT: Suspicious Process', body: 'xmrig обнаружен в /tmp. Действие: kill -9' },
+    { title: '🎣 Phishing Detected', body: 'Подозрительная ссылка заблокирована на DNS' },
+    { title: '🔐 AD Rights Change', body: 'Обнаружено изменение прав в Active Directory' },
+    { title: '📡 Beaconing Activity', body: 'Регулярные тиковые пакеты от неизвестного хоста' },
+    { title: '✅ System Clean', body: 'Сканирование завершено. Угроз не найдено.' },
+  ];
+
+  let alertIndex = 0;
+  function showAlert() {
+    const a = alerts[alertIndex % alerts.length];
+    alertIndex++;
+
+    const toast = document.createElement('div');
+    toast.className = 'alert-toast';
+    toast.innerHTML = `<div class="alert-title">${a.title}</div><div class="alert-body">${a.body}</div>`;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 500);
+    }, 4000);
+  }
+
+  setTimeout(showAlert, 2000);
+  setInterval(showAlert, 12000);
+
+  // ===== МИНИ-ИГРА: ПОЙМАЙ МАЙНЕРА =====
+  const minerBtn = document.getElementById('minerBtn');
+  const minerGame = document.getElementById('minerGame');
+  const scoreEl = document.getElementById('score');
+  let gameActive = false;
+  let score = 0;
+  let minerEl = null;
+  let moveInterval = null;
+
+  function createMiner() {
+    if (minerEl) minerEl.remove();
+    minerEl = document.createElement('div');
+    minerEl.className = 'miner';
+    minerEl.textContent = '👾';
+    minerEl.style.left = Math.random() * 80 + 10 + '%';
+    minerEl.style.top = Math.random() * 60 + 20 + '%';
+    minerEl.style.fontSize = (24 + Math.random() * 20) + 'px';
+    minerEl.style.transform = `scale(${0.8 + Math.random() * 0.6})`;
+    minerEl.addEventListener('click', catchMiner);
+    minerGame.appendChild(minerEl);
+  }
+
+  function moveMiner() {
+    if (!minerEl) return;
+    minerEl.style.left = Math.random() * 80 + 10 + '%';
+    minerEl.style.top = Math.random() * 60 + 20 + '%';
+    minerEl.style.transform = `scale(${0.8 + Math.random() * 0.6}) rotate(${Math.random() * 360}deg)`;
+  }
+
+  function catchMiner(e) {
+    e.stopPropagation();
+    score++;
+    scoreEl.textContent = `✅ Обезврежено майнеров: ${score}`;
+    minerEl.style.transform = 'scale(2) rotate(720deg)';
+    minerEl.style.opacity = '0';
+    setTimeout(() => {
+      if (gameActive) createMiner();
+    }, 300);
+  }
+
+  minerBtn.addEventListener('click', () => {
+    if (gameActive) {
+      // Остановить
+      gameActive = false;
+      clearInterval(moveInterval);
+      if (minerEl) minerEl.remove();
+      minerBtn.textContent = 'Начать охоту';
+      scoreEl.textContent = `Игра окончена. Поймано: ${score} 👾`;
+    } else {
+      // Начать
+      gameActive = true;
+      score = 0;
+      scoreEl.textContent = 'Ищи майнера 👾';
+      minerBtn.textContent = 'Остановить';
+      createMiner();
+      moveInterval = setInterval(moveMiner, 900);
+    }
+  });
+
+  // ===== ПАРАЛЛАКС ПРИ ДВИЖЕНИИ МЫШИ =====
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    document.querySelectorAll('.float-icon').forEach((icon, i) => {
+      const speed = (i + 1) * 0.5;
+      icon.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+    });
+  });
+
+  // ===== КОНФЕТТИ ПРИ КЛИКЕ НА АВАТАР =====
+  document.querySelector('.avatar').addEventListener('click', (e) => {
+    const colors = ['#ff6b1a', '#ffd93d', '#2ecc71', '#3498db', '#9b59b6', '#e74c3c'];
+    for (let i = 0; i < 20; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      confetti.style.left = e.clientX + 'px';
+      confetti.style.top = e.clientY + 'px';
+      confetti.style.width = '8px';
+      confetti.style.height = '8px';
+      confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      confetti.style.zIndex = '9999';
+      confetti.style.pointerEvents = 'none';
+      document.body.appendChild(confetti);
+
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 100 + Math.random() * 200;
+      const dx = Math.cos(angle) * velocity;
+      const dy = Math.sin(angle) * velocity;
+
+      confetti.animate([
+        { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+        { transform: `translate(${dx}px, ${dy}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+      ], {
+        duration: 800 + Math.random() * 400,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      }).onfinish = () => confetti.remove();
+    }
+  });
+
+  // ===== ПЛАВНЫЙ СКРОЛЛ =====
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
